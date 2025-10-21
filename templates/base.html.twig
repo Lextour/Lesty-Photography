@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+    {% block stylesheets %}
+      {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    {% block javascripts %}
+
+     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    const modalBody = document.getElementById('flashModalBody');
+                    if (modalBody) {
+                        modalBody.textContent = "{{ message|e('js') }}";
+                        const flashModal = new bootstrap.Modal(document.getElementById('flashModal'));
+                        flashModal.show();
+                    }
+                {% endfor %}
+            {% endfor %}
+        });
+    </script>
+      {{ encore_entry_script_tags('app') }}
+          <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+    {% endblock %}
+  </head>
+
+  <body style="overflow:auto">
+  <div class="modal fade" id="flashModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">Success</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="flashModalBody">
+        <!-- Message will be injected here -->
+      </div>
+    </div>
+  </div>
+</div>
+    {% block body %}{% endblock %}
+    <script src="{{ asset('build/app.js') }}"></script>
+    
+    <script src= "{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+  </body>
+</html>

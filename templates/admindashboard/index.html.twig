@@ -1,0 +1,59 @@
+{% extends 'adminlayout.html.twig' %}
+
+{% block content %}
+<div class="container-fluid">
+  <h3 class="mb-4">Dashboard</h3>
+
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card shadow border-0" style="background: linear-gradient(135deg, #4C763B, #B0CE88); color: white;">
+        <div class="card-body">
+          <h5>Total Produce Prices</h5>
+          <h2>₱ {{ totalSales|number_format(2, '.', ',') }}</h2>
+          <p>Potential Growth by {{ salesGrowth }}%</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow border-0" style="background: linear-gradient(135deg, #91C4C3, #043915); color: white;">
+        <div class="card-body">
+          <h5>Total Products</h5>
+          <h2>{{ productCount }}</h2>
+          <p>In system database</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow border-0" style="background: linear-gradient(135deg, #91C4C3, #FAEAB1); color: white;">
+        <div class="card-body">
+          <h5>Service Bookings</h5>
+          <h2>{{ bookingCount }}</h2>
+          <p>Total appointments booked</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow border-0" style="background: linear-gradient(135deg, #91ADC8, #84994F); color: white;">
+        <div class="card-body">
+          <h5>Registered Users</h5>
+          <h2>{{ userCount }}</h2>  
+          <p>Made Accounts</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.card {
+  border-radius: 1rem;
+  transition: transform 0.3s;
+}
+.card:hover {
+  transform: translateY(-5px);
+}
+</style>
+{% endblock %}

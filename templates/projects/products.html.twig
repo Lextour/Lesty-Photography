@@ -1,0 +1,626 @@
+{% extends 'headerfooter.html.twig' %}
+
+{% block title %}Photographz | Products{% endblock %}
+
+{% block body %}
+<!-- Google Fonts - Keeping Montserrat for headings, Open Sans for body -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}"> {# Assuming Bootstrap is already linked, but explicitly including here #}
+
+<style>
+  :root {
+    --primary-green: #4C763B; /* A rich, aesthetic green */
+    --dark-green: #2e4a28;
+    --light-green: #B0CE88;
+    --primary-black: #1a1a1a;
+    --secondary-black: #2e2e2e;
+    --primary-white: #ffffff;
+    --off-white: #f8f9fa;
+  }
+
+  body {
+    font-family: 'Open Sans', sans-serif !important;
+    overflow-x: hidden;
+    background: var(--off-white); /* Lighter background for the entire page */
+    color: var(--secondary-black);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 700;
+  }
+  p, a, li, button, span {
+    font-family: 'Open Sans', sans-serif !important;
+  }
+
+  /* Reusable Buttons */
+  .btn-primary-green {
+    background: var(--primary-green);
+    color: var(--primary-white);
+    border: 1px solid var(--primary-green);
+    transition: 0.3s ease;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 600;
+  }
+  .btn-primary-green:hover {
+    background: var(--dark-green);
+    border-color: var(--dark-green);
+    color: var(--primary-white);
+  }
+
+  .btn-outline-green {
+    background: transparent;
+    color: var(--primary-green);
+    border: 1px solid var(--primary-green);
+    transition: 0.3s ease;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 600;
+  }
+  .btn-outline-green:hover {
+    background: var(--primary-green);
+    color: var(--primary-white);
+  }
+
+  .text-green { color: var(--primary-green); }
+  .bg-green-gradient {
+    background: linear-gradient(90deg, var(--dark-green) 0%, var(--primary-green) 100%);
+  }
+
+  .btn-orange {
+    background: transparent;
+    color: var(--primary-white);
+    border: 1px solid var(--primary-white);
+    transition: 0.3s ease;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .btn-orange:hover {
+    background: var(--primary-white);
+    color: var(--primary-white);
+    transform: translateY(-2px);
+  }
+
+  /* ===== HERO SECTION ===== */
+  .hero-products {
+    background: linear-gradient(135deg, var(--dark-green) 0%, var(--primary-green) 100%);
+    color: var(--primary-white);
+    text-align: center;
+    padding: 80px 0;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  .hero-products h1 {
+    font-size: 3.2rem;
+    margin: 0;
+    font-weight: 700;
+  }
+  .hero-products p {
+    font-size: 1.3rem;
+    margin: 15px 0 0;
+    font-weight: 400;
+    opacity: 0.9;
+  }
+
+  /* ===== PAGE LAYOUT ===== */
+  .products-container-wrapper {
+    background-color: var(--primary-white); /* White content area */
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+    margin-top: 20px; /* Overlap with hero */
+    position: relative;
+    z-index: 10;
+  }
+
+  .products-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr; /* Wider sidebar */
+    gap: 40px;
+  }
+
+  /* ===== SIDEBAR STYLING ===== */
+  .sidebar {
+    padding-right: 20px;
+    border-right: 1px solid #eee; /* Subtle separator */
+  }
+  .sidebar h5 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: var(--primary-black);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 1.1rem;
+  }
+
+  .sidebar .btn-category {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: 1px solid var(--light-green); /* Outline style */
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: var(--secondary-black);
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+
+  .sidebar .btn-category:hover {
+    background-color: var(--light-green);
+    color: var(--primary-black);
+  }
+
+  .sidebar .btn-category.active {
+    background-color: var(--primary-green);
+    color: var(--primary-white);
+    border-color: var(--primary-green);
+    font-weight: 600;
+  }
+
+  .sidebar hr {
+    margin: 25px 0;
+    border-top: 1px solid #eee;
+  }
+
+  .sidebar select {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: var(--off-white);
+    font-size: 1rem;
+    color: var(--secondary-black);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .sidebar select:focus {
+    outline: none;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 2px rgba(76, 118, 59, 0.2);
+  }
+
+  /* ===== PRODUCT GRID ===== */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+  }
+
+  .product-card {
+    background-color: var(--primary-white);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  }
+
+  .product-card .card-img-top {
+    width: 100%;
+    height: 200px; /* Consistent height for images */
+    object-fit: cover; /* Cover ensures image fills, crop if necessary */
+    border-bottom: 1px solid #eee; /* Small border below image */
+    background-color: #f0f0f0; /* Fallback for transparent images */
+  }
+
+  .product-card .card-body {
+    padding: 20px;
+    text-align: left;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .product-card .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary-black);
+    margin-bottom: 8px;
+  }
+  .product-card .card-text {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  .product-card .price {
+    font-size: 1.3rem;
+    color: var(--primary-green);
+    font-weight: 700;
+    margin: 15px 0;
+  }
+
+  .product-card .button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: auto;
+  }
+  .product-card .button-group .btn {
+    flex: 1;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+  }
+
+  /* ===== MODAL STYLING ===== */
+  .modal-content {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+  .modal-header {
+    background: var(--primary-green);
+    color: var(--primary-white);
+    border-bottom: none;
+    padding: 20px 25px;
+  }
+  .modal-header .btn-close {
+    filter: invert(1); /* White close icon */
+  }
+  .modal-title {
+    font-weight: 600;
+  }
+  .modal-body {
+    padding: 30px;
+  }
+  .modal-body img {
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    max-height: 350px;
+    object-fit: cover;
+  }
+  .modal-body .details p {
+    margin-bottom: 6px;
+  }
+  .modal-body .details strong {
+    color: var(--primary-black);
+  }
+  .modal-body .price-tag {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--primary-green);
+    margin-top: 15px;
+  }
+  .modal-footer {
+    border-top: 1px solid #eee;
+    padding: 20px 30px;
+    background-color: var(--off-white);
+  }
+  .modal-footer .btn {
+    min-width: 150px;
+    font-weight: 600;
+  }
+
+  /* ===== PAGINATION ===== */
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    gap: 10px;
+  }
+  .pagination-button {
+    background: var(--off-white);
+    border: 1px solid var(--light-green);
+    color: var(--primary-green);
+    padding: 8px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  .pagination-button:hover:not(.active) {
+    background: var(--light-green);
+    color: var(--primary-white);
+  }
+  .pagination-button.active {
+    background: var(--primary-green);
+    color: var(--primary-white);
+    border-color: var(--primary-green);
+  }
+  .page-select-wrapper {
+      margin-left: 20px;
+  }
+  .page-select-wrapper select {
+      padding: 8px 12px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      background-color: var(--off-white);
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 992px) {
+    .products-layout {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    .sidebar {
+      border-right: none;
+      border-bottom: 1px solid #eee;
+      padding-right: 0;
+      padding-bottom: 30px;
+    }
+    .sidebar h5 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    .sidebar .btn-category {
+      width: auto;
+      display: inline-block;
+      margin-right: 10px;
+    }
+    .sidebar select {
+      max-width: 300px;
+      margin: 0 auto;
+      display: block;
+    }
+    .products-container-wrapper {
+      margin-top: -30px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero-products h1 { font-size: 2.5rem; }
+    .hero-products p { font-size: 1.1rem; }
+    .products-container-wrapper { padding: 20px; }
+    .product-grid { grid-template-columns: 1fr; }
+    .modal-body .row { flex-direction: column; text-align: center; }
+    .modal-body img { margin-bottom: 20px; }
+    .modal-footer .btn { min-width: unset; width: 100%; margin-bottom: 10px; }
+    .modal-footer { flex-direction: column; }
+  }
+</style>
+
+<div class="hero-products">
+  <h1>Explore Our Collection</h1>
+  <p>Capture Moments, Create Art with Photographz</p>
+</div>
+
+<div class="container products-container-wrapper">
+  <div class="products-layout">
+    <div class="sidebar">
+      <h5>Categories</h5>
+      <button class="btn-category active" onclick="filterCategory('All')">All</button>
+      <button class="btn-category" onclick="filterCategory('AESTHETIC')">AESTHETIC</button>
+      <button class="btn-category" onclick="filterCategory('BLUE')">BLUE</button>
+      <button class="btn-category" onclick="filterCategory('SUNKISS')">SUNKISS</button>
+      <button class="btn-category" onclick="filterCategory('BIRTHDAY')">BIRTHDAY</button>
+      <button class="btn-category" onclick="filterCategory('WEDDING')">WEDDING</button>
+      <button class="btn-category" onclick="filterCategory('HIGH ANGLE')">HIGH ANGLE</button>
+      <button class="btn-category" onclick="filterCategory('CLOSE UP')">CLOSE UP</button>
+
+      <hr>
+      <h5>Locations</h5>
+      <select id="brandFilter" onchange="filterBrand()">
+        <option value="">All Locations</option>
+        <option value="Studio">Studio</option>
+        <option value="Outdoor">Outdoor</option>
+        <option value="Indoor">Indoor</option>
+      </select>
+
+    </div>
+
+    <div>
+      <div class="product-grid" id="productGrid">
+        {% for product in products %}
+          <div class="product-card" data-category="{{ product.category }}" data-brand="{{ product.brand }}">
+            {% if product.image %}
+              <img src="{{ asset('uploads/products/' ~ product.image) }}" class="card-img-top" alt="{{ product.name }}">
+            {% else %}
+              <div class="d-flex align-items-center justify-content-center bg-light card-img-top">
+                <span class="text-muted">No Image</span>
+              </div>
+            {% endif %}
+            <div class="card-body">
+              <div>
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">{{ product.description|length > 60 ? product.description|slice(0,60) ~ '...' : product.description }}</p>
+              </div>
+              <div>
+                <div class="price">₱{{ product.price }}</div>
+                <div class="button-group">
+                  <button class="btn btn-primary-green" data-bs-toggle="modal" data-bs-target="#viewModal{{ product.id }}">Order Now</button>
+                  <a href="{{ path('chosen_product', {'id': product.id}) }}" class="btn btn-outline-green">View Details</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Redesigned Modal -->
+          <div class="modal fade" id="viewModal{{ product.id }}" tabindex="-1" aria-labelledby="viewModalLabel{{ product.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="viewModalLabel{{ product.id }}">{{ product.name }}</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="row align-items-center g-4">
+                    <div class="col-md-6 text-center">
+                      {% if product.image %}
+                        <img src="{{ asset('uploads/products/' ~ product.image) }}" alt="{{ product.name }}" class="img-fluid">
+                      {% else %}
+                        <div class="d-flex align-items-center justify-content-center bg-light rounded-3 shadow-sm" style="height:300px; width: 100%;">
+                          <span class="text-muted">No Image</span>
+                        </div>
+                      {% endif %}
+                    </div>
+                    <div class="col-md-6 details text-start">
+                      <h5 class="fw-bold text-black mb-3">{{ product.name }}</h5>
+                      <p class="text-muted"><strong>Brand:</strong> {{ product.brand }}</p>
+                      <p class="text-muted"><strong>Category:</strong> {{ product.category }}</p>
+                      <p class="text-secondary"><strong>Description:</strong> {{ product.description }}</p>
+                      <div class="price-tag">₱{{ product.price }}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <a href="#" class="btn btn-primary-green">Order Now</a>
+                  <a href="{{ path('chosen_product', {'id': product.id}) }}" class="btn btn-outline-green">More Details</a>
+                  <button type="button" class="btn btn-secondary-black" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Pagination here -->
+      <div class="pagination-container" id="pagination-container">
+        {# Pagination buttons will be rendered here by JS #}
+      </div>
+      <div class="text-center mt-3 page-select-wrapper" style="display: none;" id="pageSelectWrapper">
+          <select id="pageSelect" onchange="goToPage(this.value)"></select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentCategory = 'All';
+  const productsPerPage = 8; // Display fewer products per page for a cleaner look
+  let currentPage = 1;
+
+  function filterCategory(cat) {
+    currentCategory = cat;
+    document.querySelectorAll('.btn-category').forEach(b => b.classList.remove('active'));
+    // Find the clicked button and add active class
+    if (event && event.target) {
+        event.target.classList.add('active');
+    } else { // Fallback for initial load if 'All' is default
+        const allBtn = Array.from(document.querySelectorAll('.btn-category')).find(btn => btn.textContent.trim() === 'All');
+        if (allBtn) allBtn.classList.add('active');
+    }
+    currentPage = 1;
+    applyFilters();
+  }
+
+  function filterBrand() {
+    currentPage = 1;
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const brandVal = document.getElementById('brandFilter').value;
+    const allCards = Array.from(document.querySelectorAll('.product-card'));
+    let filtered = allCards.filter(card => {
+      const cat = card.getAttribute('data-category');
+      const br = card.getAttribute('data-brand');
+      const catMatch = (currentCategory === 'All') || (cat.toUpperCase() === currentCategory.toUpperCase()); // Case-insensitive
+      const brandMatch = !brandVal || (br === brandVal);
+      return catMatch && brandMatch;
+    });
+
+    allCards.forEach(c => c.style.display = 'none'); // Hide all first
+
+    const totalPages = Math.ceil(filtered.length / productsPerPage);
+    const start = (currentPage - 1) * productsPerPage;
+    const end = Math.min(start + productsPerPage, filtered.length); // Ensure end doesn't exceed array length
+
+    filtered.slice(start, end).forEach(c => c.style.display = 'block'); // Use 'block' for grid items
+
+    renderPagination(totalPages);
+  }
+
+  function renderPagination(totalPages) {
+    const container = document.getElementById('pagination-container');
+    container.innerHTML = '';
+    const pageSelect = document.getElementById('pageSelect');
+    const pageSelectWrapper = document.getElementById('pageSelectWrapper');
+
+    if (totalPages <= 1) {
+      container.style.display = 'none';
+      pageSelectWrapper.style.display = 'none';
+      return;
+    } else {
+      container.style.display = 'flex';
+      pageSelectWrapper.style.display = 'block';
+    }
+
+    const maxVisibleButtons = 5; // Total max buttons including current and siblings
+    let startPage = Math.max(1, currentPage - Math.floor((maxVisibleButtons - 1) / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisibleButtons - 1);
+
+    // Adjust startPage if we hit the end
+    if (endPage - startPage + 1 < maxVisibleButtons) {
+        startPage = Math.max(1, totalPages - maxVisibleButtons + 1);
+    }
+
+    // Previous button
+    if (currentPage > 1) {
+      const prevBtn = document.createElement('button');
+      prevBtn.innerHTML = '&laquo; Previous';
+      prevBtn.classList.add('pagination-button');
+      prevBtn.addEventListener('click', () => {
+        currentPage--;
+        applyFilters();
+      });
+      container.appendChild(prevBtn);
+    }
+
+    // Numbered buttons
+    for (let i = startPage; i <= endPage; i++) {
+      const btn = document.createElement('button');
+      btn.innerText = i;
+      btn.classList.add('pagination-button');
+      if (i === currentPage) {
+        btn.classList.add('active');
+      }
+      btn.addEventListener('click', () => {
+        currentPage = i;
+        applyFilters();
+      });
+      container.appendChild(btn);
+    }
+
+    // Next button
+    if (currentPage < totalPages) {
+      const nextBtn = document.createElement('button');
+      nextBtn.innerHTML = 'Next &raquo;';
+      nextBtn.classList.add('pagination-button');
+      nextBtn.addEventListener('click', () => {
+        currentPage++;
+        applyFilters();
+      });
+      container.appendChild(nextBtn);
+    }
+
+    // Update dropdown
+    pageSelect.innerHTML = '';
+    for (let i = 1; i <= totalPages; i++) {
+      const option = document.createElement('option');
+      option.value = i;
+      option.innerText = `Page ${i} of ${totalPages}`;
+      if (i === currentPage) option.selected = true;
+      pageSelect.appendChild(option);
+    }
+  }
+
+  // Dropdown page jump
+  function goToPage(page) {
+    currentPage = parseInt(page);
+    applyFilters();
+  }
+
+  // Initial load
+  document.addEventListener('DOMContentLoaded', () => {
+    filterCategory('All'); // Set 'All' category as active on load
+  });
+</script>
+{% endblock %}

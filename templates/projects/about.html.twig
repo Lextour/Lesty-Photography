@@ -1,0 +1,250 @@
+{% extends 'headerfooter.html.twig' %}
+
+{% block title %}Photographz | About{% endblock %}
+
+{% block body %}
+<!-- Google Fonts - Keeping Montserrat for headings, Open Sans for body -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}"> {# Assuming Bootstrap is already linked #}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"> {# For icons #}
+
+<style>
+  :root {
+    --primary-green: #4C763B; /* A rich, aesthetic green */
+    --dark-green: #2e4a28;
+    --light-green: #B0CE88;
+    --primary-black: #1a1a1a;
+    --secondary-black: #2e2e2e;
+    --primary-white: #ffffff;
+    --off-white: #f8f9fa;
+  }
+
+  body {
+    font-family: 'Open Sans', sans-serif !important;
+    overflow-x: hidden;
+    background: var(--off-white);
+    color: var(--secondary-black);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 700;
+  }
+  p, a, li, button, span {
+    font-family: 'Open Sans', sans-serif !important;
+  }
+
+  /* Reusable Buttons */
+  .btn-primary-green {
+    background: var(--primary-green);
+    color: var(--primary-white);
+    border: 1px solid var(--primary-green);
+    transition: 0.3s ease;
+    padding: 10px 25px;
+    border-radius: 5px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .btn-primary-green:hover {
+    background: var(--dark-green);
+    border-color: var(--dark-green);
+    color: var(--primary-white);
+    transform: translateY(-2px);
+  }
+
+  .text-green { color: var(--primary-green); }
+  .bg-off-white { background-color: var(--off-white); }
+  .bg-secondary-black { background-color: var(--secondary-black); }
+
+  .card {
+    border: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  }
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  }
+
+  .btn-orange {
+    background: transparent;
+    color: var(--primary-white);
+    border: 1px solid var(--primary-white);
+    transition: 0.3s ease;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .btn-orange:hover {
+    background: var(--primary-white);
+    color: var(--primary-white);
+    transform: translateY(-2px);
+  }
+
+  /* HERO SECTION */
+  .about-hero {
+    background: linear-gradient(135deg, var(--dark-green) 0%, var(--primary-green) 100%);
+    color: var(--primary-white);
+    text-align: center;
+    padding: 100px 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  .about-hero h1 {
+    font-size: 3.8rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+  }
+  .about-hero p {
+    font-size: 1.4rem;
+    font-weight: 400;
+    opacity: 0.9;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  /* ABOUT PHOTOGRAPHZ SECTION */
+  .about-story {
+    padding: 80px 0;
+    background-color: var(--primary-white);
+  }
+  .about-story h2 {
+    font-size: 2.5rem;
+    margin-bottom: 25px;
+    color: var(--primary-black);
+    text-align: center;
+  }
+  .about-story .img-container {
+    padding: 15px; /* Space around image inside the border */
+    border: 1px solid #eee; /* Light border around image */
+    border-radius: 12px;
+    background-color: var(--off-white);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  }
+  .about-story img {
+    border-radius: 8px; /* Slightly smaller radius for image itself */
+    max-height: 400px; /* Constrain image height */
+    object-fit: cover;
+    width: 100%;
+  }
+  .about-story p {
+    line-height: 1.7;
+    font-size: 1.05rem;
+    color: #555;
+  }
+
+  /* SERVICES / FEATURES SECTION */
+  .services-section {
+    padding: 80px 0;
+    background-color: var(--off-white);
+  }
+  .services-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    color: var(--primary-black);
+    text-align: center;
+  }
+  .services-section .card {
+    padding: 30px;
+    text-align: center;
+    background-color: var(--primary-white);
+  }
+  .services-section .card .icon-wrapper {
+    font-size: 3.5rem; /* Larger icons */
+    color: var(--primary-green);
+    margin-bottom: 25px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background-color: rgba(76, 118, 59, 0.1); /* Light green background for icon */
+  }
+  .services-section .card h5 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--primary-black);
+    margin-bottom: 15px;
+  }
+  .services-section .card p {
+    font-size: 0.95rem;
+    color: #666;
+  }
+
+  @media (max-width: 768px) {
+    .about-hero h1 { font-size: 2.8rem; }
+    .about-hero p { font-size: 1.1rem; }
+    .about-story h2, .services-section h2 { font-size: 2rem; }
+    .about-story img { margin-bottom: 30px; }
+  }
+</style>
+
+<!-- HERO SECTION -->
+<section class="about-hero">
+  <div class="container">
+    <h1 class="animate__animated animate__fadeInDown">About Photographz</h1>
+    <p class="animate__animated animate__fadeInUp animate__delay-1s">
+      Our Passion, Your Story. Crafted in Every Frame.
+    </p>
+  </div>
+</section>
+
+<!-- ABOUT PHOTOGRAPHZ -->
+<section class="about-story">
+  <div class="container">
+    <h2 class="animate__animated animate__fadeIn">Our Story</h2>
+    <div class="row align-items-center mt-5">
+      <div class="col-md-6 mb-4 mb-md-0 animate__animated animate__fadeInLeft">
+        <div class="img-container">
+          <img src="{{ asset('cam.jpg') }}" alt="Photographz Camera" class="img-fluid">
+        </div>
+      </div>
+      <div class="col-md-6 animate__animated animate__fadeInRight">
+        <p>
+          Founded by a team of passionate visual artists, Photographz was born from a desire to transform fleeting moments into timeless keepsakes. We believe every photograph holds a unique narrative, a snippet of life's beauty waiting to be immortalized. From the subtle nuances of candid portraits to the grand vistas of breathtaking landscapes, our mission is to bring your vision to life, one meticulously crafted frame at a time.
+        </p>
+        <p class="mt-3">
+          Our journey began with a simple camera and an unwavering commitment to quality and creativity. Today, Photographz stands as a testament to that dedication, offering not just photography services but an experience that celebrates art, emotion, and memory. We constantly evolve, embracing new techniques and technologies to ensure every client receives not just a picture, but a masterpiece.
+        </p>
+        <a href="{{ path('app_contact') }}" class="btn btn-primary-green mt-4">Contact Us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES / FEATURES -->
+<section class="services-section">
+  <div class="container">
+    <h2 class="animate__animated animate__fadeIn">Our Services & Approach</h2>
+    <div class="row g-4 mt-5">
+      <div class="col-md-4 animate__animated animate__fadeInUp animate__delay-1s">
+        <div class="card h-100">
+          <div class="icon-wrapper mx-auto">
+            <i class="bi bi-tools"></i>
+          </div>
+          <h5>Expert In-Store Services</h5>
+          <p>Beyond capturing moments, we offer professional in-store support including camera maintenance, accessory sales, and expert advice to enhance your photography journey.</p>
+        </div>
+      </div>
+      <div class="col-md-4 animate__animated animate__fadeInUp animate__delay-1-5s">
+        <div class="card h-100">
+          <div class="icon-wrapper mx-auto">
+            <i class="bi bi-star-fill"></i> {# Using a star icon for quality #}
+          </div>
+          <h5>Exceptional Quality Photos</h5>
+          <p>With an unwavering eye for detail and a deep passion for aesthetics, we meticulously craft images that transcend mere pictures, delivering harmonious, elegant, and unforgettable art.</p>
+        </div>
+      </div>
+      <div class="col-md-4 animate__animated animate__fadeInUp animate__delay-2s">
+        <div class="card h-100">
+          <div class="icon-wrapper mx-auto">
+            <i class="bi bi-gem"></i> {# Using a gem icon for premium #}
+          </div>
+          <h5>A Premium Experience</h5>
+          <p>Every session with Photographz is a celebration of light, color, and perspective, designed to be smooth and enjoyable from booking to final delivery, ensuring your complete satisfaction.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,223 @@
+{% extends 'adminlayout.html.twig' %}
+
+{% block title %}Stocks{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2 px-3">
+        <h3 class="fw-bold mb-0" style="color:#2e2e2e;">📦 Stocks</h3>
+    </div>
+
+    <!-- Stocks Table -->
+    <div class="card border-0 shadow-sm rounded-4 mx-1">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table id="stocksTable" class="table table-hover table-bordered align-middle mb-0" style="min-width:900px;">
+                    <thead style="background-color:#F88F6A; color:white;">
+                        <tr class="text-center">
+                            <th class="fw-bold">ID</th>
+                            <th class="fw-bold">Product</th>
+                            <th class="fw-bold">Photo</th>
+                            <th class="fw-bold">Stock</th>
+                            <th class="fw-bold">Created At</th>
+                            <th class="fw-bold">Updated At</th>
+                            <th class="fw-bold">Availability</th>
+                            <th class="fw-bold">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if stocks|length > 0 %}
+                        {% for stock in stocks %}
+                        <tr class="text-center">
+                            <td>{{ stock.id }}</td>
+                            <td>{{ stock.productname.name ?? 'Deleted Product' }}</td>
+                            <td>
+                                {% if stock.productname and stock.productname.image %}
+                                    <img src="{{ asset('uploads/products/' ~ stock.productname.image) }}"
+                                         alt="{{ stock.productname.name }}"
+                                         class="rounded border"
+                                         style="height:45px; width:45px; object-fit:contain; background-color:#f8f8f8; cursor:pointer;"
+                                         data-bs-toggle="modal"
+                                         data-bs-target="#showStockModal{{ stock.id }}">
+                                {% else %}
+                                    <span class="text-muted small">No Image</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ stock.stock }}</td>
+                            <td>{{ stock.createdAt ? stock.createdAt|date('Y-m-d H:i') : '' }}</td>
+                            <td>{{ stock.updatedAt ? stock.updatedAt|date('Y-m-d H:i') : '—' }}</td>
+
+                            <td>
+                            {% if stock.productname and stock.productname.isavailable %}
+                                <span class="badge bg-success rounded-pill px-3 py-2">Yes</span>
+                            {% else %}
+                                <span class="badge bg-danger rounded-pill px-3 py-2">No</span>
+                            {% endif %}
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                                    <button type="button" 
+                                            class="btn btn-sm fw-semibold"
+                                            style="background-color:#F88F6A; color:white; border-radius:6px;"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#showStockModal{{ stock.id }}">
+                                        Show
+                                    </button>
+
+                                    <button type="button"
+                                            class="btn btn-sm fw-semibold"
+                                            style="background-color:#2e2e2e; color:white; border-radius:6px;"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editStockModal{{ stock.id }}">
+                                        Edit
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- SHOW MODAL -->
+                        <div class="modal fade" id="showStockModal{{ stock.id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <div class="modal-content border-0 rounded-4 shadow-lg">
+                                    <div class="modal-header" style="background-color:#F88F6A; color:white;">
+                                        <h5 class="modal-title fw-semibold">Stock #{{ stock.id }}</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body p-4">
+                                        <div class="row align-items-start">
+                                            <div class="col-md-5 text-center mb-3 mb-md-0">
+                                                {% if stock.productname and stock.productname.image %}
+                                                    <img src="{{ asset('uploads/products/' ~ stock.productname.image) }}"
+                                                         alt="{{ stock.productname.name }}"
+                                                         class="img-fluid rounded shadow-sm"
+                                                         style="max-height:280px; object-fit:contain; background-color:#f9f9f9; padding:10px;">
+                                                {% else %}
+                                                    <div class="border rounded py-5 text-muted bg-light">No Image</div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-7">
+                                                <ul class="list-unstyled small mb-3">
+                                                    <li class="mb-2"><strong class="text-secondary">Product:</strong> {{ stock.productname.name ?? 'Deleted Product' }}</li>
+                                                    <li class="mb-2"><strong class="text-secondary">Stock:</strong> {{ stock.stock }}</li>
+                                                    <li class="mb-2"><strong class="text-secondary">Created At:</strong> {{ stock.createdAt ? stock.createdAt|date('Y-m-d H:i') : '' }}</li>
+                                                    
+                                                    <li class="mb-2"><strong class="text-secondary">Availability:</strong>
+                                                            {% if stock.productname and stock.productname.isavailable %}
+                                                                <span class="badge bg-success rounded-pill px-3 py-2">Yes</span>
+                                                            {% else %}
+                                                                <span class="badge bg-danger rounded-pill px-3 py-2">No</span>
+                                                            {% endif %}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- EDIT MODAL -->
+                        <div class="modal fade" id="editStockModal{{ stock.id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content border-0 rounded-4 shadow-lg">
+                                    <div class="modal-header" style="background-color:#2e2e2e; color:white;">
+                                        <h5 class="modal-title">Edit Stock #{{ stock.id }}</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body p-4">
+                                        {{ form_start(stockForms[stock.id]) }}
+                                        
+                                        <!-- Read-only Product Info -->
+                                        <div class="mb-3 row">
+                                            <label class="col-sm-3 col-form-label fw-semibold text-secondary">Product Name:</label>
+                                            <div class="col-sm-9">
+                                                <p class="form-control-plaintext">{{ stock.productname.name ?? 'Deleted Product' }}</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 row">
+                                            <label class="col-sm-3 col-form-label fw-semibold text-secondary">Created At:</label>
+                                            <div class="col-sm-9">
+                                                <p class="form-control-plaintext">{{ stock.createdAt ? stock.createdAt|date('Y-m-d H:i') : '' }}</p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Stock Input -->
+                                        <div class="mb-3 row align-items-center">
+                                            <label class="col-sm-3 col-form-label fw-semibold" for="stockInput{{ stock.id }}">Stock</label>
+                                            <div class="col-sm-9">
+                                                {{ form_widget(stockForms[stock.id].stock, {
+                                                    'attr': {
+                                                        'class':'form-control stock-input shadow-sm',
+                                                        'type':'number',
+                                                        'min': 0,
+                                                        'step': 1,
+                                                        'oninput': "this.value = Math.max(0, this.value)"
+                                                    }
+                                                }) }}
+                                                {{ form_errors(stockForms[stock.id].stock) }}
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-success">Update Stock</button>
+                                        {{ form_end(stockForms[stock.id]) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-4">No stocks found</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card { background-color: #fff; overflow: hidden; }
+.table-hover tbody tr:hover { background-color: #f8f9fa; }
+.badge { font-weight: 500; }
+#stocksTable th, #stocksTable td { white-space: nowrap; vertical-align: middle; }
+
+/* Stock input styling */
+.stock-input {
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid #ced4da;
+}
+
+.stock-input:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    outline: none;
+}
+
+.stock-input:hover {
+    border-color: #6c757d;
+}
+</style>
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('stocks') }}
+
+    <script>
+        // ✅ Only pass dynamic Twig data or URLs here if needed later
+        document.addEventListener("DOMContentLoaded", function () {
+            const stocksTable = document.getElementById("stocksTable");
+            if (stocksTable) {
+                stocksTable.dataset.hasData = !stocksTable.querySelector("tbody tr td")?.textContent.includes("No stocks found");
+            }
+        });
+    </script>
+{% endblock %}
+
+
+{% endblock %}
